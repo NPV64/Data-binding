@@ -1,19 +1,74 @@
-<!DOCTYPE html><html><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width"> <title>Data binding example</title> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script></head><body> <div class="container"> <div class="mount-here"> <div class="form-group"> <label>Name:</label> <input class="form-control" data-bind="personal.name"/> </div><div class="form-group"> <label>Email:</label> <input class="form-control" data-bind="personal.email" type="email"/> </div><div class="form-group"> <input type="checkbox" data-bind="rememberMe"/> <label>Remember me</label> </div><h1>Welcome, <span data-bind="personal.name"></span>!</h1> </div><pre id="model"> </pre> <button id="resetName-btn" class="btn btn-default">Reset Name</button> <button id="remember-btn" class="btn btn-default">Remember</button> <button id="forget-btn" class="btn btn-default">Forget</button> </div><script>"use strict"
-function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var _typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},_createClass=function(){function e(e,t){for(var n=0;n<t.length;n++){var r=t[n]
-r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}(),Model=function(){function e(t,n){var r=this
-if(_classCallCheck(this,e),this.values=new Map,this.listeners=[],this._initMap(n||{}),"string"==typeof t&&(t=document.querySelector(t)),t instanceof HTMLElement==0)throw Error("Cannot mount to "+t)
-var o=Array.prototype.slice.call(t.querySelectorAll("[data-bind]"),0)
-o.forEach(function(e){var t=e.dataset.bind,n=r.get(t),o=r.register(e)
-n&&o&&o(t,n),"function"==typeof o&&r.subscribe(o)})}return _createClass(e,[{key:"_initMap",value:function(e,t){var n=!0,r=!1,o=void 0
-try{for(var i,u=Object.keys(e)[Symbol.iterator]();!(n=(i=u.next()).done);n=!0){var c=i.value,a=t?t+"."+c:c
-"object"!=_typeof(e[c])?this.values.set(a,e[c]):this._initMap(e[c],a)}}catch(l){r=!0,o=l}finally{try{!n&&u["return"]&&u["return"]()}finally{if(r)throw o}}}},{key:"register",value:function(e){var t=this,n=e.dataset.bind
-if(!(e instanceof HTMLInputElement))return function(t,r){t==n&&r!=e.innerText&&(e.innerText=r)}
-switch(e.type){case"checkbox":return e.addEventListener("change",function(){t.set(n,e.checked)}),function(t,r){t==n&&r!=e.value&&(e.checked=r)}
-case"text":case"email":return e.addEventListener("input",function(){t.set(n,e.value)}),function(t,r){t==n&&r!=e.value&&(e.value=r)}}}},{key:"set",value:function(e,t){this.values.set(e,t),this.listeners.forEach(function(n){return n(e,t)})}},{key:"get",value:function(e){return this.values.get(e)}},{key:"contains",value:function(e){return this.values.contains(e)}},{key:"subscribe",value:function(e){var t=this
-return this.listeners.push(e),function(){return t.listeners=t.listeners.filter(function(e){return e!=listerner})}}},{key:"toObject",value:function(){var e={}
-return this.values.forEach(function(t,n){for(var r=e,o=n.split("."),i=0;i<o.length-1;i++)r=r[o[0]]||(r[o[0]]={})
-r[o[o.length-1]]=t}),e}}]),e}(),model=new Model(".mount-here",{personal:{name:"Jon Snow",email:"jon.snow@westeros.co.uk"},rememberMe:!1}),modelPre=document.getElementById("model"),render=function(){modelPre.innerHTML=JSON.stringify(model.toObject(),null," ")}
-model.subscribe(render),render()
-var $on=function(e,t,n){return document.querySelector(e).addEventListener(t,n)},$click=function(e,t){return $on(e,"click",t)}
-$click("#resetName-btn",function(){return model.set("personal.name","Jon Snow")}),$click("#remember-btn",function(){return model.set("rememberMe",!0)}),$click("#forget-btn",function(){return model.set("rememberMe",!1)})
-</script></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Data binding example</title>
+  
+  <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" 
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="model.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="mount-here">
+    <div class="form-group">
+      <label>Name:</label>
+      <input class="form-control" data-bind="personal.name" />
+    </div>
+    <div class="form-group">
+      <label>Email:</label>
+      <input class="form-control" data-bind="personal.email" type="email" />
+    </div>
+    <div class="form-group">
+      <input type="checkbox" data-bind="rememberMe"/>
+      <label>Remember me</label>
+    </div>
+    
+    <h1>Welcome, <span data-bind="personal.name"></span>!</h1>
+    </div>
+    <pre id="model">
+    
+    </pre>
+    <button id="resetName-btn" class="btn btn-default">Reset Name</button>
+    <button id="remember-btn" class="btn btn-default">Remember</button>
+    <button id="forget-btn" class="btn btn-default">Forget</button>
+  </div>
+
+<script>
+const model = new Model(".mount-here", {
+  personal: {
+    name: "Jon Snow",
+    email: "jon.snow@westeros.co.uk",
+  },
+  rememberMe: false
+})
+
+const modelPre = document.getElementById('model')
+const render = () => {
+  modelPre.innerHTML = JSON.stringify(model.toObject(), null, " ");
+}
+model.subscribe(render);
+render()
+
+const $on = (selector, event, func) => document.querySelector(selector).addEventListener(event, func)
+const $click = (selector, func) => $on(selector, "click", func)
+
+$click("#resetName-btn", ()=>model.set('personal.name', 'Jon Snow'));
+$click("#remember-btn", () => model.set('rememberMe', true))
+$click("#forget-btn", () => model.set('rememberMe', false))
+
+</script>
+</body>
+</html>
